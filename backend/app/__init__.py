@@ -35,7 +35,7 @@ def create_app(config_name: str = None) -> FastAPI:
 
     app = FastAPI(
         title="InsightForge Analytics API",
-        version="2.0.0",
+        version="1.0.0",
         description="FastAPI, SQLAlchemy, PostgreSQL, and scikit-learn analytics service.",
         lifespan=lifespan,
     )
