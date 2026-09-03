@@ -5,9 +5,7 @@ import {
   Users,
   Settings2,
   TrendingUp,
-  Activity,
   ChevronLeft,
-  ChevronRight,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { IS_STATIC, getManifest } from '../../services/staticData';
@@ -40,31 +38,41 @@ export function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) {
       )}
     >
       <div className="flex h-14 items-center justify-between border-b border-white/10 px-4">
-        {!collapsed && (
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="grid h-8 w-8 flex-shrink-0 place-items-center rounded-lg bg-emerald-400 text-zinc-950 shadow-lg shadow-emerald-500/20">
-              <Activity className="h-4 w-4" />
+        {!collapsed ? (
+          <>
+            <div className="flex min-w-0 items-center gap-3">
+              <img
+                src="/analytics.svg"
+                alt="InsightForge Logo"
+                className="h-8 w-8 flex-shrink-0 rounded-lg shadow-lg shadow-cyan-500/20"
+              />
+              <div className="min-w-0">
+                <span className="block truncate text-sm font-semibold">InsightForge</span>
+                <span className="block truncate text-[11px] text-zinc-400">Analytics cockpit</span>
+              </div>
             </div>
-            <div className="min-w-0">
-              <span className="block truncate text-sm font-semibold">InsightForge</span>
-              <span className="block truncate text-[11px] text-zinc-400">Analytics cockpit</span>
-            </div>
-          </div>
+            <button
+              onClick={() => onCollapsedChange(true)}
+              className="rounded-lg p-1.5 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white"
+              aria-label="Collapse sidebar"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={() => onCollapsedChange(false)}
+            className="mx-auto flex items-center justify-center rounded-lg p-1 transition-transform hover:scale-105"
+            aria-label="Expand sidebar"
+            title="Expand sidebar"
+          >
+            <img
+              src="/analytics.svg"
+              alt="InsightForge Logo"
+              className="h-8 w-8 rounded-lg shadow-lg shadow-cyan-500/20"
+            />
+          </button>
         )}
-        <button
-          onClick={() => onCollapsedChange(!collapsed)}
-          className={clsx(
-            'rounded-lg p-1.5 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white',
-            collapsed && 'mx-auto'
-          )}
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {collapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <ChevronLeft className="h-4 w-4" />
-          )}
-        </button>
       </div>
 
       <nav className="flex flex-col gap-1 p-2">
