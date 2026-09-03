@@ -85,20 +85,20 @@ export function Header({ title, subtitle }: HeaderProps) {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <header className="sticky top-0 z-30 h-14 flex-shrink-0 border-b border-black/10 bg-white/75 backdrop-blur-xl dark:border-white/10 dark:bg-zinc-950/70">
+    <header className="sticky top-0 z-30 h-14 flex-shrink-0 border-b border-emerald-950/10 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-zinc-950/70">
       <div className="flex h-full items-center justify-between gap-3 px-4">
         {/* Title */}
         <div className="flex min-w-0 items-center gap-3">
-          <h1 className="truncate text-base font-semibold text-zinc-950 dark:text-white">{title}</h1>
+          <h1 className="truncate text-base font-bold text-zinc-900 dark:text-white">{title}</h1>
           {subtitle && (
-            <p className="hidden text-xs text-zinc-500 sm:block dark:text-zinc-400">|&nbsp; {subtitle}</p>
+            <p className="hidden text-xs text-emerald-800 font-medium sm:block dark:text-zinc-400">|&nbsp; {subtitle}</p>
           )}
         </div>
 
         {/* Controls */}
         <div className="flex min-w-0 items-center gap-2">
           {/* Date Range Selector */}
-          <div className="hidden items-center rounded-lg border border-black/10 bg-white/70 p-0.5 shadow-sm lg:flex dark:border-white/10 dark:bg-white/5">
+          <div className="hidden items-center rounded-lg border border-emerald-950/10 bg-white/80 p-0.5 shadow-sm lg:flex dark:border-white/10 dark:bg-white/5">
             {datePresets.map((preset) => (
               <button
                 key={preset.value}
@@ -106,8 +106,8 @@ export function Header({ title, subtitle }: HeaderProps) {
                 className={clsx(
                   'rounded-md px-2.5 py-1 text-xs font-medium transition-all',
                   filters.dateRange.preset === preset.value
-                    ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950'
-                    : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-white'
+                    ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/20 dark:bg-white dark:text-zinc-950'
+                    : 'text-zinc-600 hover:bg-emerald-50 hover:text-emerald-950 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-white'
                 )}
               >
                 {preset.label}
@@ -143,9 +143,9 @@ export function Header({ title, subtitle }: HeaderProps) {
                 )}
               </button>
               {showNotifications && (
-                <div className="absolute right-0 z-50 mt-2 w-80 overflow-hidden rounded-lg border border-black/10 bg-white shadow-2xl shadow-black/15 dark:border-white/10 dark:bg-zinc-900">
-                  <div className="flex items-center justify-between border-b border-black/10 px-4 py-3 dark:border-white/10">
-                    <h3 className="text-sm font-semibold text-zinc-950 dark:text-white">Notifications</h3>
+                <div className="absolute right-0 z-50 mt-2 w-80 overflow-hidden rounded-lg border border-emerald-950/10 bg-white shadow-2xl shadow-emerald-950/15 dark:border-white/10 dark:bg-zinc-900">
+                  <div className="flex items-center justify-between border-b border-emerald-950/10 px-4 py-3 dark:border-white/10">
+                    <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Notifications</h3>
                     <button
                       onClick={() => setShowNotifications(false)}
                       className="text-zinc-400 hover:text-zinc-950 dark:hover:text-white"
@@ -159,8 +159,8 @@ export function Header({ title, subtitle }: HeaderProps) {
                         key={notif.id}
                         onClick={() => markNotificationRead(notif.id)}
                         className={clsx(
-                          'w-full border-b border-black/10 px-4 py-3 text-left transition-colors last:border-0 hover:bg-zinc-50 dark:border-white/10 dark:hover:bg-white/10',
-                          !notif.read && 'bg-emerald-50/70 dark:bg-emerald-500/10'
+                          'w-full border-b border-emerald-950/10 px-4 py-3 text-left transition-colors last:border-0 hover:bg-emerald-50/60 dark:border-white/10 dark:hover:bg-white/10',
+                          !notif.read && 'bg-emerald-50/90 dark:bg-emerald-500/10'
                         )}
                       >
                         <div className="flex items-start gap-2">
@@ -169,14 +169,14 @@ export function Header({ title, subtitle }: HeaderProps) {
                           )}
                           <div className={clsx(!notif.read ? '' : 'ml-4')}>
                             <p className="text-sm text-zinc-800 dark:text-zinc-200">{notif.message}</p>
-                            <p className="mt-1 text-xs text-zinc-500">{notif.time}</p>
+                            <p className="mt-1 text-xs text-emerald-700/80 dark:text-zinc-500">{notif.time}</p>
                           </div>
                         </div>
                       </button>
                     ))}
                   </div>
-                  <div className="border-t border-black/10 px-4 py-2 dark:border-white/10">
-                    <button className="text-sm text-emerald-700 hover:text-emerald-600 dark:text-emerald-300">
+                  <div className="border-t border-emerald-950/10 px-4 py-2 dark:border-white/10">
+                    <button className="text-sm font-semibold text-emerald-700 hover:text-emerald-800 dark:text-emerald-300">
                       View all notifications
                     </button>
                   </div>

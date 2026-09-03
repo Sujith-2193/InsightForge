@@ -23,11 +23,18 @@
 
 ---
 
-## Frontend Preview
+## Frontend Previews: Light & Dark Modes
 
+### Light Mode (White & Emerald Green with Multi-Colors)
 <div align="center">
-  <img src="docs/images/dashboard_preview.png" alt="InsightForge Dashboard Screenshot" width="100%" />
-  <p><em>InsightForge executive dashboard showing real-time KPIs, revenue trajectory curves, category breakdowns, and sales pipeline conversion metrics.</em></p>
+  <img src="docs/images/light_mode_preview.png" alt="InsightForge Light Mode Screenshot" width="100%" />
+  <p><em>Light mode cockpit: crisp white surfaces, emerald green identity, and vibrant multi-color data series.</em></p>
+</div>
+
+### Dark Mode (Obsidian Executive Cockpit)
+<div align="center">
+  <img src="docs/images/dashboard_preview.png" alt="InsightForge Dark Mode Screenshot" width="100%" />
+  <p><em>Dark mode cockpit: high-contrast obsidian zinc with illuminated neon data curves.</em></p>
 </div>
 
 ---

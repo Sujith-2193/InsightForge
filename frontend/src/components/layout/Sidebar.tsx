@@ -33,27 +33,27 @@ export function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) {
   return (
     <aside
       className={clsx(
-        'fixed left-0 top-0 z-40 h-screen border-r border-white/10 bg-zinc-950/90 text-white shadow-2xl shadow-black/20 backdrop-blur-xl transition-all duration-300',
+        'fixed left-0 top-0 z-40 h-screen border-r border-emerald-950/10 bg-white/95 text-zinc-800 shadow-xl shadow-emerald-950/5 backdrop-blur-xl transition-all duration-300 dark:border-white/10 dark:bg-zinc-950/90 dark:text-white dark:shadow-2xl dark:shadow-black/20',
         collapsed ? 'w-16' : 'w-64'
       )}
     >
-      <div className="flex h-14 items-center justify-between border-b border-white/10 px-4">
+      <div className="flex h-14 items-center justify-between border-b border-emerald-950/10 px-4 dark:border-white/10">
         {!collapsed ? (
           <>
             <div className="flex min-w-0 items-center gap-3">
               <img
                 src="/analytics.svg"
                 alt="InsightForge Logo"
-                className="h-8 w-8 flex-shrink-0 rounded-lg shadow-lg shadow-cyan-500/20"
+                className="h-8 w-8 flex-shrink-0 rounded-lg shadow-md shadow-emerald-500/20"
               />
               <div className="min-w-0">
-                <span className="block truncate text-sm font-semibold">InsightForge</span>
-                <span className="block truncate text-[11px] text-zinc-400">Analytics cockpit</span>
+                <span className="block truncate text-sm font-bold text-zinc-900 dark:text-white">InsightForge</span>
+                <span className="block truncate text-[11px] font-medium text-emerald-700 dark:text-zinc-400">Analytics cockpit</span>
               </div>
             </div>
             <button
               onClick={() => onCollapsedChange(true)}
-              className="rounded-lg p-1.5 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white"
+              className="rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-emerald-50 hover:text-emerald-900 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-white"
               aria-label="Collapse sidebar"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -69,7 +69,7 @@ export function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) {
             <img
               src="/analytics.svg"
               alt="InsightForge Logo"
-              className="h-8 w-8 rounded-lg shadow-lg shadow-cyan-500/20"
+              className="h-8 w-8 rounded-lg shadow-md shadow-emerald-500/20"
             />
           </button>
         )}
@@ -84,8 +84,8 @@ export function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) {
               clsx(
                 'group relative flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-medium transition-all duration-200',
                 isActive
-                  ? 'bg-white text-zinc-950 shadow-lg shadow-emerald-500/10'
-                  : 'text-zinc-400 hover:bg-white/10 hover:text-white'
+                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 dark:bg-white dark:text-zinc-950 dark:shadow-white/10'
+                  : 'text-zinc-600 hover:bg-emerald-50/80 hover:text-emerald-950 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-white'
               )
             }
           >
@@ -97,16 +97,16 @@ export function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) {
 
       {/* Footer */}
       {!collapsed && (
-        <div className="absolute bottom-0 left-0 right-0 border-t border-white/10 px-3 py-3">
-          <div className="rounded-lg bg-white/[0.04] px-3 py-2 text-xs text-zinc-400">
-            <p className="font-medium text-zinc-200">FastAPI intelligence layer</p>
+        <div className="absolute bottom-0 left-0 right-0 border-t border-emerald-950/10 px-3 py-3 dark:border-white/10">
+          <div className="rounded-lg bg-emerald-50/60 border border-emerald-900/10 px-3 py-2 text-xs text-zinc-600 dark:bg-white/[0.04] dark:border-white/5 dark:text-zinc-400">
+            <p className="font-semibold text-emerald-900 dark:font-medium dark:text-zinc-200">FastAPI intelligence layer</p>
             {/*
               The demo's data is frozen at the date it was generated, and its
               date presets resolve against that date. Saying so is the honest
               thing: without it the dashboard silently claims to be current.
             */}
             {IS_STATIC && getManifest() && (
-              <p className="mt-1 text-zinc-500">
+              <p className="mt-1 text-emerald-700/80 dark:text-zinc-500">
                 Static demo &middot; data as of {getManifest()!.snapshotDate}
               </p>
             )}

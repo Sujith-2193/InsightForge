@@ -8,6 +8,16 @@
  * consumed as raw var() inside inline styles and Recharts props. It silently
  * dropped --color-ordinal-2 and --color-ordinal-4, which made two of the five
  * funnel bars render with no background at all, plus two of the four status
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+ * Chart tokens, LIGHT mode.
+ *
+ * Declared in :root rather than @theme on purpose. Tailwind v4's @theme only
+ * emits a variable when a generated utility class references it, and these are
+ * consumed as raw var() inside inline styles and Recharts props. It silently
+ * dropped --color-ordinal-2 and --color-ordinal-4, which made two of the five
+ * funnel bars render with no background at all, plus two of the four status
  * colours. A plain :root block always emits.
  *
  * Values are unchanged and still the validated set: the categorical palette
@@ -15,46 +25,40 @@
  * --ordinal against the same surface.
  * ------------------------------------------------------------------------- */
 :root {
-  /* Categorical. Fixed slot order is the colour-vision-deficiency mechanism;
-     assign in order and never cycle. A 9th series folds into "Other". */
-  --color-chart-1: #0f766e;  /* teal    */
-  --color-chart-2: #ea580c;  /* orange  */
-  --color-chart-3: #2563eb;  /* blue    */
-  --color-chart-4: #ca8a04;  /* amber   */
-  --color-chart-5: #be185d;  /* berry   */
-  --color-chart-6: #16a34a;  /* green   */
-  --color-chart-7: #7c3aed;  /* violet  */
-  --color-chart-8: #dc2626;  /* red     */
+  /* Categorical. Vibrant emerald hero + harmonious multi-colors for light mode */
+  --color-chart-1: #059669;  /* emerald green */
+  --color-chart-2: #0284c7;  /* sky blue      */
+  --color-chart-3: #7c3aed;  /* violet        */
+  --color-chart-4: #d97706;  /* amber         */
+  --color-chart-5: #0d9488;  /* teal          */
+  --color-chart-6: #e11d48;  /* rose          */
+  --color-chart-7: #10b981;  /* mint          */
+  --color-chart-8: #4f46e5;  /* indigo        */
 
-  /* Ordinal ramp for ORDERED categories only (funnel stages, tiers).
-     Light tops out at five steps: a sixth cannot keep a visible lightness gap
-     and still clear the contrast floor against white. */
-  --color-ordinal-1: #99f6e4;
-  --color-ordinal-2: #5eead4;
-  --color-ordinal-3: #14b8a6;
-  --color-ordinal-4: #0f766e;
-  --color-ordinal-5: #134e4a;
+  /* Ordinal ramp for funnel stages in light mode (emerald ramp) */
+  --color-ordinal-1: #a7f3d0;
+  --color-ordinal-2: #6ee7b7;
+  --color-ordinal-3: #34d399;
+  --color-ordinal-4: #10b981;
+  --color-ordinal-5: #047857;
 
-  /* Ink for a label sitting ON each ramp step.
-     White throughout, Ryan's call 2026-08-09. Measured contrast against the
-     light ramp runs 2.1 / 3.0 / 4.4 / 6.6 / 9.9 to 1, so the first two steps
-     sit under the 4.5:1 bar. Flipping any step back is a one-line change. */
-  --color-ordinal-1-ink: #ffffff;
-  --color-ordinal-2-ink: #ffffff;
-  --color-ordinal-3-ink: #ffffff;
+  /* Ink for labels on ordinal ramp */
+  --color-ordinal-1-ink: #064e3b;
+  --color-ordinal-2-ink: #064e3b;
+  --color-ordinal-3-ink: #064e3b;
   --color-ordinal-4-ink: #ffffff;
   --color-ordinal-5-ink: #ffffff;
 
-  /* Chrome. Recessive by design. */
-  --color-grid: #e5e7eb;
-  --color-axis: #d1d5db;
-  --color-ink-muted: #6b7280;
+  /* Chrome */
+  --color-grid: #e2e8f0;
+  --color-axis: #94a3b8;
+  --color-ink-muted: #64748b;
 
-  /* Status. Reserved for good/warning/serious/critical, never a series. */
-  --color-status-good: #0ca30c;
-  --color-status-warning: #fab219;
-  --color-status-serious: #ec835a;
-  --color-status-critical: #d03b3b;
+  /* Status */
+  --color-status-good: #10b981;
+  --color-status-warning: #f59e0b;
+  --color-status-serious: #f97316;
+  --color-status-critical: #ef4444;
 }
 
 @theme {
@@ -157,16 +161,16 @@ html.dark body {
 .app-shell {
   position: relative;
   background:
-    linear-gradient(135deg, rgba(20, 184, 166, 0.12), transparent 30%),
-    linear-gradient(315deg, rgba(234, 88, 12, 0.10), transparent 24%),
-    #f6f8fb;
+    radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.07) 0%, transparent 40%),
+    linear-gradient(135deg, #ffffff 0%, #f4f9f6 50%, #f0f7f3 100%);
 }
 
 .app-shell::before {
   animation: gridDrift 18s linear infinite;
   background-image:
-    linear-gradient(rgba(15, 118, 110, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 118, 110, 0.08) 1px, transparent 1px);
+    linear-gradient(rgba(16, 185, 129, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.06) 1px, transparent 1px);
   background-size: 42px 42px;
   content: "";
   inset: 0;
@@ -188,9 +192,9 @@ html.dark body {
 }
 
 .surface-card {
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(24, 24, 27, 0.10);
-  box-shadow: 0 16px 40px -28px rgba(24, 24, 27, 0.55);
+  background: rgba(255, 255, 255, 0.90);
+  border: 1px solid rgba(16, 185, 129, 0.16);
+  box-shadow: 0 12px 32px -16px rgba(16, 185, 129, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
   backdrop-filter: blur(16px);
 }
 
