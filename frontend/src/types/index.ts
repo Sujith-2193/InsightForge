@@ -1,7 +1,7 @@
 /**
  * TypeScript Type Definitions
  *
- * Centralized type definitions for the SignalFlow Analytics frontend.
+ * Centralized type definitions for the InsightForge Analytics frontend.
  * These interfaces define the shape of data flowing between the API
  * and React components.
  *

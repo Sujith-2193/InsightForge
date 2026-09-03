@@ -1,5 +1,5 @@
 /**
- * SignalFlow Analytics - Main Application Entry Point
+ * InsightForge Analytics - Main Application Entry Point
  *
  * This is the root component that sets up the application infrastructure:
  * - React Query for server state management and data fetching

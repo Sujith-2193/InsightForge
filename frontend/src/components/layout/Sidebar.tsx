@@ -46,7 +46,7 @@ export function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) {
               <Activity className="h-4 w-4" />
             </div>
             <div className="min-w-0">
-              <span className="block truncate text-sm font-semibold">SignalFlow</span>
+              <span className="block truncate text-sm font-semibold">InsightForge</span>
               <span className="block truncate text-[11px] text-zinc-400">Analytics cockpit</span>
             </div>
           </div>

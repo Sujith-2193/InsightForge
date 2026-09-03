@@ -34,7 +34,7 @@ def create_app(config_name: str = None) -> FastAPI:
         db.session.remove()
 
     app = FastAPI(
-        title="SignalFlow Analytics API",
+        title="InsightForge Analytics API",
         version="2.0.0",
         description="FastAPI, SQLAlchemy, PostgreSQL, and scikit-learn analytics service.",
         lifespan=lifespan,

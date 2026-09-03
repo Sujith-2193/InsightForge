@@ -1,6 +1,6 @@
-# SignalFlow Analytics
+# InsightForge Analytics
 
-SignalFlow Analytics is an independently maintained business intelligence dashboard covering five areas: Dashboard, Revenue, Customers, Operations, and Forecasting. It preserves the original analytics functionality while migrating the backend to FastAPI and refreshing the frontend with a modern cockpit-style interface.
+InsightForge Analytics is an independently maintained business intelligence dashboard covering five areas: Dashboard, Revenue, Customers, Operations, and Forecasting. It preserves the original analytics functionality while migrating the backend to FastAPI and refreshing the frontend with a modern cockpit-style interface.
 
 ## Stack
 
@@ -114,4 +114,4 @@ analytics_dashboard/
 
 ## Notes
 
-This repository intentionally does not rewrite historical authorship. The current implementation is maintained as SignalFlow Analytics, reusing proven domain logic where it keeps behavior correct and replacing the framework and presentation layers for the new project direction.
+This repository intentionally does not rewrite historical authorship. The current implementation is maintained as InsightForge Analytics, reusing proven domain logic where it keeps behavior correct and replacing the framework and presentation layers for the new project direction.

@@ -1,5 +1,5 @@
 """
-Synthetic Data Generator for Enterprise Analytics Dashboard
+Synthetic Data Generator for InsightForge Analytics
 
 Generates realistic business data including:
 - 100+ products across 8 categories

@@ -1,4 +1,4 @@
-# Analytics Dashboard
+# InsightForge Analytics
 
 Full-stack analytics dashboard. Docker-based with separate backend and frontend.
 
