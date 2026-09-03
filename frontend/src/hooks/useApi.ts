@@ -1,0 +1,440 @@
+/**
+ * React Query Hooks for API Data Fetching
+ *
+ * This module provides custom React hooks that wrap the API service layer with
+ * React Query for automatic caching, refetching, and state management.
+ *
+ * Key Features:
+ * - Automatic cache key generation based on endpoint and filter parameters
+ * - 30-second stale time for responsive updates
+ * - keepPreviousData for smooth transitions when filters change
+ * - Type-safe return values matching API response types
+ *
+ * Hook Naming Convention:
+ * - use{Domain}{Resource} - e.g., useRevenueTrends, useCustomerSegments
+ *
+ * All hooks automatically subscribe to the global filter context and refetch
+ * when date range changes.
+ *
+ * Usage Example:
+ *   const { data, isLoading, error } = useRevenueTrends('month');
+ *   if (isLoading) return <Spinner />;
+ *   return <Chart data={data} />;
+ */
+
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import type { UseQueryOptions } from '@tanstack/react-query';
+import { useFilters } from './useFilters';
+import {
+  dashboardApi,
+  revenueApi,
+  customerApi,
+  operationsApi,
+  forecastingApi,
+} from '../services/api';
+import type {
+  DashboardSummary,
+  RevenueTrend,
+  CategoryData,
+  ChannelData,
+  RegionData,
+  Product,
+  CustomerSegment,
+  CohortData,
+  SalesRep,
+  PipelineStage,
+  ForecastDataPoint,
+  ChurnRiskCustomer,
+  Customer,
+} from '../types';
+
+// ============================================================================
+// Dashboard Hooks
+// ============================================================================
+
+/**
+ * Fetch the executive dashboard summary including KPIs, trends, and top-level metrics
+ */
+export function useDashboardSummary(
+  options?: Omit<UseQueryOptions<DashboardSummary>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['dashboard', 'summary', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => dashboardApi.getSummary(filters.dateRange),
+    staleTime: 30 * 1000, // 30 seconds for more responsive updates
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+// Revenue hooks
+export function useRevenueTrends(
+  granularity: 'day' | 'week' | 'month' = 'day',
+  options?: Omit<UseQueryOptions<RevenueTrend[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['revenue', 'trends', filters.dateRange.startDate, filters.dateRange.endDate, granularity],
+    queryFn: () => revenueApi.getTrends(filters.dateRange, granularity),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useRevenueByCategory(
+  options?: Omit<UseQueryOptions<CategoryData[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['revenue', 'by-category', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => revenueApi.getByCategory(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useRevenueByRegion(
+  options?: Omit<UseQueryOptions<RegionData[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['revenue', 'by-region', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => revenueApi.getByRegion(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useRevenueByChannel(
+  options?: Omit<UseQueryOptions<ChannelData[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['revenue', 'by-channel', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => revenueApi.getByChannel(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useTopProducts(
+  limit = 10,
+  options?: Omit<UseQueryOptions<Product[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['revenue', 'top-products', filters.dateRange.startDate, filters.dateRange.endDate, limit],
+    queryFn: () => revenueApi.getTopProducts(filters.dateRange, limit),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+// Customer hooks
+export function useCustomerOverview(
+  options?: Omit<
+    UseQueryOptions<{
+      total: number;
+      totalChange: number;
+      new: number;
+      newChange: number;
+      churned: number;
+      churnedChange: number;
+      atRisk: number;
+      atRiskChange: number;
+    }>,
+    'queryKey' | 'queryFn'
+  >
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['customers', 'overview', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => customerApi.getOverview(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useCustomerSegments(
+  options?: Omit<UseQueryOptions<CustomerSegment[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['customers', 'segments', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => customerApi.getSegments(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useCustomerCohorts(
+  options?: Omit<UseQueryOptions<CohortData[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['customers', 'cohorts', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => customerApi.getCohorts(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useAtRiskCustomers(
+  limit = 10,
+  options?: Omit<UseQueryOptions<Customer[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['customers', 'at-risk', limit, filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => customerApi.getAtRisk(limit, filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useLifetimeValue(
+  options?: Omit<UseQueryOptions<{ range: string; count: number; percentage: number }[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['customers', 'lifetime-value', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => customerApi.getLifetimeValue(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useCustomerAcquisition(
+  options?: Omit<UseQueryOptions<{ date: string; channel: string; count: number }[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['customers', 'acquisition', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => customerApi.getAcquisition(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+// Operations hooks
+export function usePipeline(
+  options?: Omit<UseQueryOptions<PipelineStage[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['operations', 'pipeline', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => operationsApi.getPipeline(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useSalesPerformance(
+  options?: Omit<UseQueryOptions<SalesRep[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['operations', 'sales-performance', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => operationsApi.getSalesPerformance(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useCycleTime(
+  options?: Omit<UseQueryOptions<{ stage: string; avgDays: number }[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['operations', 'cycle-time', filters.dateRange.startDate],
+    queryFn: () => operationsApi.getCycleTime(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function usePipelineKpis(
+  options?: Omit<
+    UseQueryOptions<{
+      pipelineValue: number;
+      pipelineChange: number;
+      avgCycleTime: number;
+      cycleTimeChange: number;
+      winRate: number;
+      winRateChange: number;
+      avgDealSize: number;
+      dealSizeChange: number;
+    }>,
+    'queryKey' | 'queryFn'
+  >
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['operations', 'pipeline-kpis', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => operationsApi.getPipelineKpis(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useDealSizeDistribution(
+  options?: Omit<UseQueryOptions<{ bucket: string; count: number; value: number }[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['operations', 'deal-size-distribution', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => operationsApi.getDealSizeDistribution(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+// Forecasting hooks
+export function useRevenueForecast(
+  periods = 6,
+  options?: Omit<UseQueryOptions<ForecastDataPoint[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['forecasting', 'revenue', periods, filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => forecastingApi.getRevenueForecast(periods, filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useChurnRisk(
+  limit = 10,
+  options?: Omit<UseQueryOptions<ChurnRiskCustomer[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['forecasting', 'churn-risk', limit, filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => forecastingApi.getChurnRisk(limit, filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useSeasonality(
+  options?: Omit<UseQueryOptions<{ month: string; index: number; trend: number }[]>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['forecasting', 'seasonality', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => forecastingApi.getSeasonality(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useForecastingKpis(
+  options?: Omit<
+    UseQueryOptions<{
+      predictedRevenue: number;
+      predictedChange: number;
+      atRiskCount: number;
+      atRiskChange: number;
+      modelAccuracy: number;
+      accuracyChange: number;
+      forecastPeriod: number;
+    }>,
+    'queryKey' | 'queryFn'
+  >
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['forecasting', 'kpis', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => forecastingApi.getKpis(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+/**
+ * Derived from the service function rather than restated.
+ *
+ * This hook used to declare its own copy of the response shape, including a
+ * `confidence` field the endpoint does not return. Two hand-maintained copies
+ * of one contract meant the compiler validated the hook against the hook, and
+ * the page rendered `undefined%` with no type error anywhere.
+ */
+type ModelPerformance = Awaited<ReturnType<typeof forecastingApi.getModelPerformance>>;
+
+export function useModelPerformance(
+  options?: Omit<UseQueryOptions<ModelPerformance>, 'queryKey' | 'queryFn'>
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['forecasting', 'model-performance', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => forecastingApi.getModelPerformance(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
+
+export function useRevenueAtRisk(
+  options?: Omit<
+    UseQueryOptions<{
+      highRisk: { value: number; customers: number; label: string; threshold: string };
+      mediumRisk: { value: number; customers: number; label: string; threshold: string };
+      lowRisk: { value: number; customers: number; label: string; threshold: string };
+      total: number;
+    }>,
+    'queryKey' | 'queryFn'
+  >
+) {
+  const { filters } = useFilters();
+
+  return useQuery({
+    queryKey: ['forecasting', 'revenue-at-risk', filters.dateRange.startDate, filters.dateRange.endDate],
+    queryFn: () => forecastingApi.getRevenueAtRisk(filters.dateRange),
+    staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
+    ...options,
+  });
+}
