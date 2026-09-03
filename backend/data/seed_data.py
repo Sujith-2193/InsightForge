@@ -382,19 +382,12 @@ def seed_database():
     START_DATE = datetime.now() - timedelta(days=730)  # 2 years ago
     END_DATE = datetime.now()
 
-    from flask import current_app
     from app import create_app, db
     from app.models import Product, Customer, SalesRep, Transaction, Pipeline
 
-    # Reuse an active application context when there is one, and only build an
-    # app when called standalone. Unconditionally calling create_app() here was
-    # half of a recursion loop with the factory's old auto-reseed block.
-    if current_app:
-        ctx = contextlib.nullcontext()
-    else:
-        ctx = create_app('development').app_context()
+    app = create_app(os.getenv('APP_ENV') or 'development')
 
-    with ctx:
+    with app.app_context():
         print("Generating synthetic data...")
 
         # Generate data
@@ -410,9 +403,16 @@ def seed_database():
         print(f"Generated {len(transactions_data)} transactions")
         print(f"Generated {len(pipeline_data)} pipeline opportunities")
 
+        # Ensure tables exist
+        db.create_all()
+
         # Clear existing data
         print("\nClearing existing data...")
-        db.session.execute(db.text('TRUNCATE TABLE transactions, pipeline, customers, sales_reps, products RESTART IDENTITY CASCADE'))
+        if db.engine.dialect.name == 'sqlite':
+            for table in ('transactions', 'pipeline', 'customers', 'sales_reps', 'products'):
+                db.session.execute(db.text(f'DELETE FROM {table}'))
+        else:
+            db.session.execute(db.text('TRUNCATE TABLE transactions, pipeline, customers, sales_reps, products RESTART IDENTITY CASCADE'))
         db.session.commit()
 
         # Insert products

@@ -45,7 +45,12 @@ import { IS_STATIC, fetchStatic } from './staticData';
  * Pinned in static mode: the path is the snapshot's cache key, so letting a
  * stray VITE_API_URL prepend a host would change every key and miss every file.
  */
-const API_BASE = IS_STATIC ? '/api' : import.meta.env.VITE_API_URL || '/api';
+const getApiBase = (): string => {
+  if (IS_STATIC) return '/api';
+  const raw = (import.meta.env.VITE_API_URL as string | undefined) || '/api';
+  return raw.endsWith('/api') ? raw : `${raw.replace(/\/+$/, '')}/api`;
+};
+const API_BASE = getApiBase();
 
 /**
  * Generic fetch wrapper with error handling and JSON parsing

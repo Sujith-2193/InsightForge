@@ -82,7 +82,7 @@ class Database:
     ForeignKey = sa.ForeignKey
     UniqueConstraint = sa.UniqueConstraint
     func = sa.func
-    text = sa.text
+    text = staticmethod(sa.text)
     relationship = staticmethod(relationship)
 
     def __init__(self):
@@ -96,7 +96,7 @@ class Database:
 
         if uri.startswith("postgres://"):
             uri = uri.replace("postgres://", "postgresql+psycopg://", 1)
-        elif uri.startswith("postgresql://"):
+        elif uri.startswith("postgresql://") and not uri.startswith("postgresql+"):
             uri = uri.replace("postgresql://", "postgresql+psycopg://", 1)
 
         if self.engine is not None:
@@ -106,6 +106,9 @@ class Database:
         kwargs: dict[str, Any] = {"pool_pre_ping": True}
         if uri.startswith("sqlite"):
             kwargs = {"connect_args": {"check_same_thread": False}}
+            if ":memory:" in uri:
+                from sqlalchemy.pool import StaticPool
+                kwargs["poolclass"] = StaticPool
 
         self.engine = create_engine(uri, **kwargs)
         self.session.configure(bind=self.engine)

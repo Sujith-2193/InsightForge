@@ -71,9 +71,13 @@ command -v node >/dev/null    || die "node is not installed"
 
 "$PY" - <<'PY' || die "cannot reach the database. Is PostgreSQL running?"
 import os, sys
-import psycopg2
 try:
-    psycopg2.connect(os.environ["DATABASE_URL"]).close()
+    try:
+        import psycopg
+        psycopg.connect(os.environ["DATABASE_URL"]).close()
+    except ImportError:
+        import psycopg2
+        psycopg2.connect(os.environ["DATABASE_URL"]).close()
 except Exception as exc:
     print(f"  {exc}".rstrip(), file=sys.stderr)
     sys.exit(1)

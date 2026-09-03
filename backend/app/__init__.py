@@ -16,7 +16,7 @@ db = Database()
 
 def create_app(config_name: str = None) -> FastAPI:
     if config_name is None:
-        config_name = os.getenv('APP_ENV') or os.getenv('FLASK_ENV', 'development')
+        config_name = os.getenv('APP_ENV', 'development')
 
     static_folder = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static')
     has_static = os.path.exists(static_folder)
@@ -110,5 +110,45 @@ def create_app(config_name: str = None) -> FastAPI:
             db.create_all()
         except Exception:  # noqa: BLE001 - tables already exist is the normal case
             pass
+
+    def test_client(*args, **kwargs):
+        from fastapi.testclient import TestClient
+
+        class CompatResponse:
+            def __init__(self, response):
+                self._response = response
+                self.status_code = response.status_code
+
+            def get_json(self):
+                return self._response.json()
+
+            def json(self):
+                return self._response.json()
+
+            def __getattr__(self, name):
+                return getattr(self._response, name)
+
+        class CompatClient:
+            def __init__(self, client):
+                self._client = client
+
+            def get(self, *a, **kw):
+                return CompatResponse(self._client.get(*a, **kw))
+
+            def post(self, *a, **kw):
+                return CompatResponse(self._client.post(*a, **kw))
+
+            def put(self, *a, **kw):
+                return CompatResponse(self._client.put(*a, **kw))
+
+            def delete(self, *a, **kw):
+                return CompatResponse(self._client.delete(*a, **kw))
+
+            def __getattr__(self, name):
+                return getattr(self._client, name)
+
+        return CompatClient(TestClient(app, *args, **kwargs))
+
+    app.test_client = test_client
 
     return app
